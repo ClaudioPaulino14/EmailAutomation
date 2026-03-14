@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from google import genai
 import PyPDF2
@@ -6,6 +7,7 @@ from datetime import datetime
 import plotly.graph_objects as go
 import io
 import time
+from dotenv import load_dotenv
 
 # 1. CONFIGURAÇÃO DA PÁGINA
 st.set_page_config(page_title="AutoMail.ai - Inteligência Financeira", page_icon="📧", layout="wide")
@@ -34,8 +36,12 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 3. BACKEND 
-API_KEY = "AIzaSyBjxTaWPICs8KLnPNLdgzZ2hUiQCImv3-s"
+# 3. BACKEND
+load_dotenv()
+API_KEY = os.getenv("GEMINI_API_KEY")
+if not API_KEY:
+    st.error("Chave GEMINI_API_KEY nao encontrada. Configure no .env.")
+    st.stop()
 client = genai.Client(api_key=API_KEY)
 
 def realizar_triagem_avancada(conteudo):
